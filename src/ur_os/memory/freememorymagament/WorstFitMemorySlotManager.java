@@ -14,12 +14,33 @@ public class WorstFitMemorySlotManager extends FreeMemorySlotManager{
         super(memSize);
     }
     
-    @Override
+  @Override
     public MemorySlot getSlot(int size) {
-        MemorySlot m = null;
-        //ToDo
-        
-        return m;
+        MemorySlot worstSlot = null;
+        int worstRemainder = -1;
+
+        for (MemorySlot memorySlot : list) {
+            if (memorySlot.canContain(size)) {
+                int remainder = memorySlot.getRemainder(size);
+
+                if (remainder > worstRemainder) {
+                    worstRemainder = remainder;
+                    worstSlot = memorySlot;
+                }
+            }
+        }
+
+        if (worstSlot == null) {
+            System.out.println("Error - Memory cannot allocate a slot big enough for the requested memory");
+            return null;
+        }
+
+        if (worstSlot.getSize() == size) {
+            list.remove(worstSlot);
+            return worstSlot;
+        } else {
+            return worstSlot.assignMemory(size);
+        }
     }
     
 }
