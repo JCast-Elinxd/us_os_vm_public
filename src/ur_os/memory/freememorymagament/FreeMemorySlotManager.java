@@ -113,5 +113,29 @@ public abstract class FreeMemorySlotManager extends FreeMemoryManager{
     public int getSize() {
         return this.list.size();
     }
+
+    public double calculateFragmentation() {
+    if (list.isEmpty()) {
+        return 0.0;
+    }
+
+    int totalFreeMemory = 0;
+    int largestFreeSlot = 0;
+
+    for (MemorySlot memorySlot : list) {
+        int currentSize = memorySlot.getSize();
+        totalFreeMemory += currentSize;
+
+        if (currentSize > largestFreeSlot) {
+            largestFreeSlot = currentSize;
+        }
+    }
+
+    if (totalFreeMemory == 0) {
+        return 0.0;
+    }
+
+    return 1.0 - ((double) largestFreeSlot / totalFreeMemory);
+    }
     
 }
