@@ -153,6 +153,12 @@ public class OS {
                 System.out.println("Process Terminated: "+p.getPid()+" "+p.getSize());
                 fmm.reclaimMemory(p);
                 system.showFreeMemory();
+
+                if (fmm instanceof FreeMemorySlotManager) {
+                    FreeMemorySlotManager fsmm = (FreeMemorySlotManager) fmm;
+                    System.out.println("External Fragmentation: " + fsmm.calculateFragmentation());
+                }
+
                 break;
             
             case IO_DONE: //It is assumed that the process in IO is done and it has been removed from the queue
