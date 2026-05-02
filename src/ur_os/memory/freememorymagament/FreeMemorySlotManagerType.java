@@ -12,5 +12,6 @@ public enum FreeMemorySlotManagerType {
     FIRST_FIT,
     BEST_FIT,
     WORST_FIT,
-    NEXT_FIT
+    NEXT_FIT,
+    LAST_FIT
 }
