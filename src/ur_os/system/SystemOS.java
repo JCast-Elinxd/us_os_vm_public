@@ -62,8 +62,8 @@ public class SystemOS implements Runnable{
         processes = new ArrayList();
         //initSimulationQueue();
         //initSimulationQueueSimple();
-        //initSimulationQueueSimpler();
-        initSimulationQueueComparison();
+        initSimulationQueueSimpler();
+        //initSimulationQueueComparison();
         
 
         showProcesses();

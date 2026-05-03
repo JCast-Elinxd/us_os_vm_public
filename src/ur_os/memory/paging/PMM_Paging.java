@@ -101,27 +101,27 @@ public class PMM_Paging extends ProcessMemoryManager{
     }
     
     public MemoryAddress getPageMemoryAddressFromLocalAddress(int locAdd){
-        
-        //Include your code here
-        
-        
-        return new MemoryAddress(-1, -1);
+        int page = locAdd / OS.PAGE_SIZE;
+        int offset = locAdd % OS.PAGE_SIZE;
+        return new MemoryAddress(page, offset);
     }
     
     public int getFrameMemoryAddressFromLogicalMemoryAddress(int page){
-        
-        //Include your code here
-        
-        return -1;
+        return pt.getFrameIdFromPage(page);
     }
     
-    public MemoryAddress getFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-        
-        //Include your code here
-        //Return null if the address is not loaded in a frame (just for virtual memory)
-        //Include a memory access to the page that is being accessed and that is loaded
-        
-        return new MemoryAddress(-1, -1);
+   public MemoryAddress getFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
+        int page = m.getDivision();
+        int offset = m.getOffset();
+        int frameId = pt.getFrameIdFromPage(page);
+    
+        if(frameId == -1){
+            return null; // page fault
+        }
+    
+        this.addMemoryAccess(page);
+        int physicalAddress = frameId * OS.PAGE_SIZE + offset;
+        return new MemoryAddress(page, physicalAddress - page);
     }
     
     
@@ -130,10 +130,15 @@ public class PMM_Paging extends ProcessMemoryManager{
     }
     
     public MemoryAddress getVFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-        
-        //Include your code here
-        
-        return new MemoryAddress(-1, -1);
+        int page = m.getDivision();
+        int offset = m.getOffset();
+        int frameId = vpt.getFrameIdFromPage(page);
+    
+        if(frameId == -1){
+            return new MemoryAddress(-1, -1);
+        }
+    
+        return new MemoryAddress(frameId * OS.PAGE_SIZE, offset);
     }
     
    

@@ -38,8 +38,8 @@ public class SegmentTable {
         this.programSize = programSize;
         this.segmentNumber = segmentNumber;
         segmentTable = new ArrayList(segmentNumber); 
-        //r = new Random(SystemOS.SEED_SEGMENTS);
-        r = new Random();
+        r = new Random(SystemOS.SEED_SEGMENTS);
+        //r = new Random();
         if(auto)
             createSegments();
     }
@@ -85,23 +85,31 @@ public class SegmentTable {
     public MemoryAddress getSegmentMemoryAddressFromLocalAddress(int locAdd, boolean store){
         int segment = -1;
         int offset = -1;
-        
-        //Include your code here
-        
-        //For Virtual Memory
-        if(store){
+        int accumulated = 0;
+    
+        for(int i = 0; i < segmentNumber; i++){
+            int limit = segmentTable.get(i).getLimit();
+            if(locAdd < accumulated + limit){
+                segment = i;
+                offset = locAdd - accumulated;
+                break;
+            }
+            accumulated += limit;
+        }
+    
+        if(store && segment != -1){
             this.segmentTable.get(segment).setDirty();
         }
-              
-        System.out.println("Accessing Segment "+segment+" and offset "+offset);
+    
+        System.out.println("Accessing Segment " + segment + " and offset " + offset);
         return new MemoryAddress(segment, offset);
     }
     
     public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-        
-        //Include your code here
-        
-        return new MemoryAddress(-1, -1);
+        int segment = m.getDivision();
+        int offset = m.getOffset();
+        int base = segmentTable.get(segment).getBase();
+        return new MemoryAddress(base, offset);
     }
     
     public SegmentTableEntry getSegment(int i){
