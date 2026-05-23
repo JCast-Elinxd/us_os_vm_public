@@ -12,5 +12,7 @@ public enum ProcessVirtualMemoryManagerType {
     FIFO, //First in first out
     LRU, //Least recently used
     MFU, //Most frecuently used
-    LFU //Least frecuently used
+    LFU, //Least frecuently used
+    SECOND_CHANCE, //FIFO with reference bit approximation
+    MRU //Most recently used
 }
